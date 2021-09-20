@@ -5,13 +5,15 @@ import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
 import Rating from '@material-ui/lab/Rating';
 
 import useStyles from './styles';
-import { Coordinates } from 'pages';
+
+import { usePlaces } from 'context/usePlaces';
 
 const KEY = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
 
-const Map = ({ setCoordinates, setBounds, coordinates, places }) => {
+const Map = () => {
   const classes = useStyles();
   const isDesktop = useMediaQuery('(min-width:600px)');
+  const { places, coordinates, updateCoordinates, updateBounds } = usePlaces();
 
   return (
     <div className={classes.mapContainer}>
@@ -23,8 +25,8 @@ const Map = ({ setCoordinates, setBounds, coordinates, places }) => {
         margin={[50, 50, 50, 50]}
         onChange={(e) => {
           console.log('e', e);
-          setCoordinates({ lat: e.center.lat, lng: e.center.lng });
-          setBounds({ ne: e.marginBounds.ne, sw: e.marginBounds.sw });
+          updateCoordinates({ lat: e.center.lat, lng: e.center.lng });
+          updateBounds({ ne: e.marginBounds.ne, sw: e.marginBounds.sw });
         }}
         onChildClick={() => {}}
       >

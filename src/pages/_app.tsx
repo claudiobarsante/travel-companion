@@ -8,7 +8,7 @@ import { PlacesProvider } from 'context/usePlaces';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   useEffect(() => {
-    // Remove the server-side injected CSS.
+    // -- For Material UI -  Remove the server-side injected CSS.
     const jssStyles = document.querySelector('#jss-server-side');
     if (jssStyles) {
       jssStyles?.parentElement?.removeChild(jssStyles);

@@ -7,50 +7,21 @@ import dynamic from 'next/dynamic';
 import Header from 'components/Header';
 import List from 'components/List';
 import { getPlacesData } from '../api';
+import { usePlaces } from 'context/usePlaces';
 
 const MapWithNoSSR = dynamic(() => import('components/Map'), {
   ssr: false
 });
 
-export type Coordinates = {
-  lat: number;
-  lng: number;
-};
-
-export type Bounds = {
-  ne: {
-    lat: number;
-    lng: number;
-  };
-  sw: {
-    lat: number;
-    lng: number;
-  };
-};
-
 const Home: NextPage = () => {
-  const [places, setPlaces] = useState([]);
-  const [coordinates, setCoordinates] = useState<Coordinates>({
-    lat: 0,
-    lng: 0
-  });
-  const [bounds, setBounds] = useState<Bounds>({
-    ne: {
-      lat: 0,
-      lng: 0
-    },
-    sw: {
-      lat: 0,
-      lng: 0
-    }
-  });
+  const { bounds, coordinates, places, updateCoordinates } = usePlaces();
 
   useEffect(() => {
     // -- getting current location of the user using the built in browser geolocation api
     navigator.geolocation.getCurrentPosition(
       ({ coords }: GeolocationPosition) => {
         const { latitude, longitude } = coords;
-        setCoordinates({ lat: latitude, lng: longitude });
+        updateCoordinates({ lat: latitude, lng: longitude });
       }
     );
   }, []);
