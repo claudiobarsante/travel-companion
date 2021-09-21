@@ -138,22 +138,10 @@ const PlacesProvider = ({ children }: PlacesProviderProps) => {
   };
 
   const getPlaces = async (bounds: Bounds) => {
-    const response = await getPlaceService(bounds);
+    const response: Place[] = await getPlaceService(bounds);
     if (response) {
-      const awards = [];
-
-      for (let i = 0; i < response.awards.length; i++) {
-        awards.push({
-          smallImageUrl: response.awards[i].images.small,
-          displayName: response.awards[i].display_name
-        });
-      }
-      const all = {
-        name: response.name,
-        address: response.address
-      };
+      setPlaces(response);
     }
-    console.log('response', response);
   };
 
   console.log('bounds', bounds);

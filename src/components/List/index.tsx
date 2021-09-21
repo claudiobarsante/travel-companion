@@ -12,8 +12,12 @@ import {
 import PlaceDetails from '../PlaceDetails';
 
 import useStyles from './styles';
+import type { Place } from 'context/usePlaces';
 
-const List = ({ places }) => {
+type Props = {
+  places: Place[];
+};
+const List = ({ places }: Props) => {
   const [type, setType] = useState<string>('restaurants');
   const [rating, setRating] = useState<number>(0);
 

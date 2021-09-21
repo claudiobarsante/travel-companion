@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { Bounds } from 'context/usePlaces';
+import type { Bounds, Place } from 'context/usePlaces';
 
 const URL =
   'https://travel-advisor.p.rapidapi.com/restaurants/list-in-boundary';
@@ -27,7 +27,7 @@ export const getPlaceService = async (bounds: Bounds) => {
     const {
       data: { data }
     } = await axios.get(URL, options);
-    return data;
+    return data as Place[];
   } catch (error) {
     console.log('error');
   }

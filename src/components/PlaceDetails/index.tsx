@@ -12,22 +12,30 @@ import LocationOnIcon from '@material-ui/icons/LocationOn';
 import PhoneIcon from '@material-ui/icons/Phone';
 import Rating from '@material-ui/lab/Rating';
 import Image from 'next/image';
+import type { Place } from 'context/usePlaces';
 
 import useStyles from './styles';
 
-const PlaceDetails = ({ place }) => {
+type Props = {
+  place: Place;
+};
+
+const PlaceDetails = ({ place }: Props) => {
   const classes = useStyles();
+
+  let imageUrl = place.photo?.images?.large?.url;
+  if (!imageUrl)
+    imageUrl =
+      'https://www.foodserviceandhospitality.com/wp-content/uploads/2016/09/Restaurant-Placeholder-001.jpg';
+
+  console.log('image url: ' + imageUrl);
   return (
     <Card elevation={6}>
       <CardMedia title={place.name}>
         <div className={classes.nextImageWrapper}>
           <Image
             alt={`Picture of the restaurant ${place.name}`}
-            src={
-              place.photo
-                ? place.photo.images.large.url
-                : 'https://www.foodserviceandhospitality.com/wp-content/uploads/2016/09/Restaurant-Placeholder-001.jpg'
-            }
+            src={imageUrl}
             layout="fill"
             quality={75}
             objectFit="cover"
