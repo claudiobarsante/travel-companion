@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   CircularProgress,
   Grid,
@@ -13,6 +13,7 @@ import PlaceDetails from '../PlaceDetails';
 
 import useStyles from './styles';
 import type { Place } from 'context/usePlaces';
+import { usePlaces } from 'context/usePlaces';
 
 type Props = {
   places: Place[];
@@ -20,7 +21,12 @@ type Props = {
 const List = ({ places }: Props) => {
   const [type, setType] = useState<string>('restaurants');
   const [rating, setRating] = useState<number>(0);
+  const [elementsRefs, setElementsRefs] = useState([]);
 
+  const { clickedThumbnailId } = usePlaces();
+
+  console.log({ clickedThumbnailId });
+  console.log({ places });
   const classes = useStyles();
 
   return (
@@ -56,10 +62,14 @@ const List = ({ places }: Props) => {
         </Select>
       </FormControl>
       <Grid container spacing={3} className={classes.list}>
-        {places?.map((place, index) =>
+        {places?.map((place) =>
           place.name ? (
-            <Grid item key={index} xs={12}>
-              <PlaceDetails place={place} />
+            <Grid item key={place.location_id} xs={12}>
+              <PlaceDetails
+                place={place}
+                selected={clickedThumbnailId === place.location_id}
+                refProp={place.location_id}
+              />
             </Grid>
           ) : null
         )}

@@ -13,15 +13,22 @@ import PhoneIcon from '@material-ui/icons/Phone';
 import Rating from '@material-ui/lab/Rating';
 import Image from 'next/image';
 import type { Place } from 'context/usePlaces';
+import { useRef } from 'react';
 
 import useStyles from './styles';
 
 type Props = {
   place: Place;
+  selected: boolean;
+  refProp: any;
 };
 
-const PlaceDetails = ({ place }: Props) => {
-  // --
+const PlaceDetails = ({ place, refProp, selected }: Props) => {
+  // -- The scrollIntoView() method scrolls the specified element into the visible area of the browser window.
+  const reference = useRef(refProp);
+  if (selected)
+    reference?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
   const classes = useStyles();
 
   let imageUrl = place.photo?.images?.large?.url;
@@ -30,7 +37,7 @@ const PlaceDetails = ({ place }: Props) => {
       'https://www.foodserviceandhospitality.com/wp-content/uploads/2016/09/Restaurant-Placeholder-001.jpg';
 
   return (
-    <Card elevation={6}>
+    <Card elevation={6} ref={reference}>
       <CardMedia title={place.name}>
         <div className={classes.nextImageWrapper}>
           <Image

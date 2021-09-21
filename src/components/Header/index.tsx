@@ -4,6 +4,7 @@ import SearchIcon from '@material-ui/icons/search';
 
 import useStyles from './styles';
 import { CollectionsOutlined } from '@material-ui/icons';
+import React from 'react';
 
 const Header = () => {
   const classes = useStyles();
@@ -34,4 +35,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default React.memo(Header);

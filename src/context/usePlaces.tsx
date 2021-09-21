@@ -58,6 +58,7 @@ export type Place = {
   };
   latitude: string;
   longitude: string;
+  location_id: string;
   num_reviews: string;
   phone: string;
   price_level: string;
@@ -93,6 +94,7 @@ const PLACE_INITIAL_STATE = {
   },
   latitude: '0',
   longitude: '0',
+  location_id: '',
   num_reviews: '0',
   phone: '',
   price_level: '',
@@ -109,6 +111,8 @@ type PlacesContextData = {
   updateCoordinates: (coordinates: Coordinates) => void;
   updateBounds: (bounds: Bounds) => void;
   getPlaces: (bounds: Bounds) => void;
+  updateClickedThumbnail: (thumbnailId: string) => void;
+  clickedThumbnailId: string;
 };
 
 const PlacesContext = createContext({} as PlacesContextData);
@@ -119,6 +123,7 @@ const PlacesProvider = ({ children }: PlacesProviderProps) => {
     {} as Coordinates
   );
   const [bounds, setBounds] = useState<Bounds>(BOUNDS_INITIAL_STATE);
+  const [clickedThumbnailId, setClickedThumbnailId] = useState<string>('');
 
   const updateCoordinates = (coordinates: Coordinates) => {
     setCoordinates({ lat: coordinates.lat, lng: coordinates.lng });
@@ -137,6 +142,10 @@ const PlacesProvider = ({ children }: PlacesProviderProps) => {
     });
   };
 
+  const updateClickedThumbnail = (thumbnailId: string) => {
+    setClickedThumbnailId(thumbnailId);
+  };
+
   const getPlaces = async (bounds: Bounds) => {
     const response: Place[] = await getPlaceService(bounds);
     if (response) {
@@ -153,8 +162,10 @@ const PlacesProvider = ({ children }: PlacesProviderProps) => {
         places,
         coordinates,
         bounds,
+        clickedThumbnailId,
         updateCoordinates,
         updateBounds,
+        updateClickedThumbnail,
         getPlaces
       }}
     >
