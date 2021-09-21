@@ -21,6 +21,7 @@ type Props = {
 };
 
 const PlaceDetails = ({ place }: Props) => {
+  // --
   const classes = useStyles();
 
   let imageUrl = place.photo?.images?.large?.url;
@@ -28,7 +29,6 @@ const PlaceDetails = ({ place }: Props) => {
     imageUrl =
       'https://www.foodserviceandhospitality.com/wp-content/uploads/2016/09/Restaurant-Placeholder-001.jpg';
 
-  console.log('image url: ' + imageUrl);
   return (
     <Card elevation={6}>
       <CardMedia title={place.name}>

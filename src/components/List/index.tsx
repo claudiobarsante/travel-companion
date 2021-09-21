@@ -56,11 +56,13 @@ const List = ({ places }: Props) => {
         </Select>
       </FormControl>
       <Grid container spacing={3} className={classes.list}>
-        {places?.map((place, index) => (
-          <Grid item key={index} xs={12}>
-            <PlaceDetails place={place} />
-          </Grid>
-        ))}
+        {places?.map((place, index) =>
+          place.name ? (
+            <Grid item key={index} xs={12}>
+              <PlaceDetails place={place} />
+            </Grid>
+          ) : null
+        )}
       </Grid>
     </div>
   );
