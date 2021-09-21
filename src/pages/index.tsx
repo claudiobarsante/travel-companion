@@ -6,7 +6,7 @@ import { Grid } from '@material-ui/core';
 import dynamic from 'next/dynamic';
 import Header from 'components/Header';
 import List from 'components/List';
-import { getPlacesData } from '../api';
+import { getPlaceService } from '../api';
 import { usePlaces } from 'context/usePlaces';
 
 const MapWithNoSSR = dynamic(() => import('components/Map'), {
@@ -14,7 +14,8 @@ const MapWithNoSSR = dynamic(() => import('components/Map'), {
 });
 
 const Home: NextPage = () => {
-  const { bounds, coordinates, places, updateCoordinates } = usePlaces();
+  const { bounds, coordinates, places, updateCoordinates, getPlaces } =
+    usePlaces();
 
   useEffect(() => {
     // -- getting current location of the user using the built in browser geolocation api
@@ -24,15 +25,16 @@ const Home: NextPage = () => {
         updateCoordinates({ lat: latitude, lng: longitude });
       }
     );
+    getPlaces(bounds);
   }, []);
 
-  useEffect(() => {
-    console.log(coordinates, bounds);
-    getPlacesData(bounds.sw, bounds.ne).then((data) => {
-      console.log('data', data);
-      setPlaces(data);
-    });
-  }, [coordinates, bounds]);
+  // useEffect(() => {
+  //   console.log(coordinates, bounds);
+  //   getPlaceService(bounds.sw, bounds.ne).then((data) => {
+  //     console.log('data', data);
+  //     setPlaces(data);
+  //   });
+  // }, [coordinates, bounds]);
 
   return (
     <>
@@ -43,15 +45,10 @@ const Home: NextPage = () => {
       <Header />
       <Grid container spacing={3} style={{ width: '100%' }}>
         <Grid item xs={12} md={4}>
-          <List places={places} />
+          {/* <List places={places} /> */}
         </Grid>
         <Grid item xs={12} md={8}>
-          <MapWithNoSSR
-            coordinates={coordinates}
-            setCoordinates={setCoordinates}
-            setBounds={setBounds}
-            places={places}
-          />
+          <MapWithNoSSR />
         </Grid>
       </Grid>
     </>

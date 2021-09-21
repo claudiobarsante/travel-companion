@@ -7,13 +7,20 @@ import Rating from '@material-ui/lab/Rating';
 import useStyles from './styles';
 
 import { usePlaces } from 'context/usePlaces';
+import type { Bounds } from 'context/usePlaces';
 
 const KEY = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
 
 const Map = () => {
   const classes = useStyles();
   const isDesktop = useMediaQuery('(min-width:600px)');
-  const { places, coordinates, updateCoordinates, updateBounds } = usePlaces();
+  const { places, coordinates, updateCoordinates, updateBounds, getPlaces } =
+    usePlaces();
+
+  const handleUpdateBounds = (bounds: Bounds) => {
+    updateBounds(bounds);
+    getPlaces(bounds);
+  };
 
   return (
     <div className={classes.mapContainer}>
@@ -26,7 +33,7 @@ const Map = () => {
         onChange={(e) => {
           console.log('e', e);
           updateCoordinates({ lat: e.center.lat, lng: e.center.lng });
-          updateBounds({ ne: e.marginBounds.ne, sw: e.marginBounds.sw });
+          handleUpdateBounds({ ne: e.marginBounds.ne, sw: e.marginBounds.sw });
         }}
         onChildClick={() => {}}
       >

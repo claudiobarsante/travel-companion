@@ -1,4 +1,5 @@
 import axios from 'axios';
+import type { Bounds } from 'context/usePlaces';
 
 const URL =
   'https://travel-advisor.p.rapidapi.com/restaurants/list-in-boundary';
@@ -6,7 +7,9 @@ const URL =
 const RAPID_API_HOST = String(process.env.NEXT_PUBLIC_RAPID_API_HOST);
 const RAPID_API_KEY = String(process.env.NEXT_PUBLIC_RAPID_API_KEY);
 
-export const getPlacesData = async (sw, ne) => {
+export const getPlaceService = async (bounds: Bounds) => {
+  const { sw, ne } = bounds;
+
   const options = {
     params: {
       bl_latitude: sw.lat,

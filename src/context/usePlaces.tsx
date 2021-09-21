@@ -1,3 +1,4 @@
+import { getPlaceService } from 'api';
 import { useContext, createContext, useState } from 'react';
 
 type PlacesProviderProps = {
@@ -20,9 +21,22 @@ export type Bounds = {
   };
 };
 
+const BOUNDS_INITIAL_STATE = {
+  ne: {
+    lat: 0,
+    lng: 0
+  },
+  sw: {
+    lat: 0,
+    lng: 0
+  }
+};
+
 type Award = {
-  smallImageUrl: string;
-  displayName: string;
+  images: {
+    small: string;
+  };
+  display_name: string;
 };
 
 type Cuisine = {
@@ -35,32 +49,56 @@ export type Place = {
   address: string;
   awards: Award[];
   cuisine: Cuisine[];
-  imageLargeUrl: string;
+  photo: {
+    images: {
+      large: {
+        url: string;
+      };
+    };
+  };
   latitude: string;
   longitude: string;
-  numReviews: number;
+  num_reviews: string;
   phone: string;
-  priceLevel: string;
+  price_level: string;
   ranking: string;
-  rating: number;
-  tripAdvisorUrl: string;
+  rating: string;
+  web_url: string;
   website: string;
 };
 
 const PLACE_INITIAL_STATE = {
   name: '',
   address: '',
-  awards: [{ smallImageUrl: '', displayName: '' }],
-  cuisine: [{ key: '', name: '' }],
-  imageLargeUrl: '',
+  awards: [
+    {
+      images: {
+        small: ''
+      },
+      display_name: ''
+    }
+  ],
+  cuisine: [
+    {
+      key: '',
+      name: ''
+    }
+  ],
+  photo: {
+    images: {
+      large: {
+        url: ''
+      }
+    }
+  },
   latitude: '0',
   longitude: '0',
-  numReviews: 0,
+  num_reviews: '0',
   phone: '',
-  priceLevel: '',
+  price_level: '',
   ranking: '',
-  rating: 0,
-  tripAdvisorUrl: '',
+  rating: '0',
+  web_url: '',
   website: ''
 };
 
@@ -70,6 +108,7 @@ type PlacesContextData = {
   bounds: Bounds;
   updateCoordinates: (coordinates: Coordinates) => void;
   updateBounds: (bounds: Bounds) => void;
+  getPlaces: (bounds: Bounds) => void;
 };
 
 const PlacesContext = createContext({} as PlacesContextData);
@@ -79,7 +118,7 @@ const PlacesProvider = ({ children }: PlacesProviderProps) => {
   const [coordinates, setCoordinates] = useState<Coordinates>(
     {} as Coordinates
   );
-  const [bounds, setBounds] = useState<Bounds>({} as Bounds);
+  const [bounds, setBounds] = useState<Bounds>(BOUNDS_INITIAL_STATE);
 
   const updateCoordinates = (coordinates: Coordinates) => {
     setCoordinates({ lat: coordinates.lat, lng: coordinates.lng });
@@ -98,9 +137,38 @@ const PlacesProvider = ({ children }: PlacesProviderProps) => {
     });
   };
 
+  const getPlaces = async (bounds: Bounds) => {
+    const response = await getPlaceService(bounds);
+    if (response) {
+      const awards = [];
+
+      for (let i = 0; i < response.awards.length; i++) {
+        awards.push({
+          smallImageUrl: response.awards[i].images.small,
+          displayName: response.awards[i].display_name
+        });
+      }
+      const all = {
+        name: response.name,
+        address: response.address
+      };
+    }
+    console.log('response', response);
+  };
+
+  console.log('bounds', bounds);
+  console.log('coordinates', coordinates);
+
   return (
     <PlacesContext.Provider
-      value={{ places, coordinates, bounds, updateCoordinates, updateBounds }}
+      value={{
+        places,
+        coordinates,
+        bounds,
+        updateCoordinates,
+        updateBounds,
+        getPlaces
+      }}
     >
       {children}
     </PlacesContext.Provider>
