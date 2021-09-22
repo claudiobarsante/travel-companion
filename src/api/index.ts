@@ -1,13 +1,12 @@
 import axios from 'axios';
 import type { Bounds, Place } from 'context/usePlaces';
 
-const URL =
-  'https://travel-advisor.p.rapidapi.com/restaurants/list-in-boundary';
-
 const RAPID_API_HOST = String(process.env.NEXT_PUBLIC_RAPID_API_HOST);
 const RAPID_API_KEY = String(process.env.NEXT_PUBLIC_RAPID_API_KEY);
 
-export const getPlaceService = async (bounds: Bounds) => {
+export const getPlaceService = async (placeType: string, bounds: Bounds) => {
+  const URL = `https://travel-advisor.p.rapidapi.com/${placeType}/list-in-boundary`;
+
   const { sw, ne } = bounds;
 
   const options = {

@@ -6,7 +6,6 @@ import { Grid } from '@material-ui/core';
 import dynamic from 'next/dynamic';
 import Header from 'components/Header';
 import List from 'components/List';
-import { getPlaceService } from '../api';
 import { usePlaces } from 'context/usePlaces';
 
 const MapWithNoSSR = dynamic(() => import('components/Map'), {
@@ -14,8 +13,14 @@ const MapWithNoSSR = dynamic(() => import('components/Map'), {
 });
 
 const Home: NextPage = () => {
-  const { bounds, coordinates, places, updateCoordinates, getPlaces } =
-    usePlaces();
+  const {
+    bounds,
+    coordinates,
+    places,
+    updateCoordinates,
+    getPlaces,
+    placeType
+  } = usePlaces();
 
   useEffect(() => {
     // -- getting current location of the user using the built in browser geolocation api
@@ -25,8 +30,8 @@ const Home: NextPage = () => {
         updateCoordinates({ lat: latitude, lng: longitude });
       }
     );
-    getPlaces(bounds);
-  }, []);
+    getPlaces(placeType, bounds);
+  }, [placeType, bounds]);
 
   // useEffect(() => {
   //   console.log(coordinates, bounds);

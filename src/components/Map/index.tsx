@@ -17,6 +17,7 @@ const Map = () => {
   const isDesktop = useMediaQuery('(min-width:600px)');
   const {
     places,
+    placeType,
     coordinates,
     updateClickedThumbnail,
     updateCoordinates,
@@ -26,7 +27,7 @@ const Map = () => {
 
   const handleUpdateBounds = useCallback((bounds: Bounds) => {
     updateBounds(bounds);
-    getPlaces(bounds);
+    getPlaces(placeType, bounds);
   }, []);
 
   const handleUpdateCoordinates = useCallback((coordinates: Coordinates) => {

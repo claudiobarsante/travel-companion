@@ -105,32 +105,40 @@ const PLACE_INITIAL_STATE = {
 };
 
 type PlacesContextData = {
-  places: Place[];
-  coordinates: Coordinates;
   bounds: Bounds;
-  updateCoordinates: (coordinates: Coordinates) => void;
-  updateBounds: (bounds: Bounds) => void;
-  getPlaces: (bounds: Bounds) => void;
-  updateClickedThumbnail: (thumbnailId: string) => void;
   clickedThumbnailId: string;
+  coordinates: Coordinates;
+  isLoading: boolean;
+  places: Place[];
+  placeType: string;
+  placeRating: number;
+  getPlaces: (placeType: string, bounds: Bounds) => void;
+  updateBounds: (bounds: Bounds) => void;
+  updateClickedThumbnail: (thumbnailId: string) => void;
+  updateCoordinates: (coordinates: Coordinates) => void;
+  updatePlaceType: (type: string) => void;
+  updatePlaceRating: (rating: number) => void;
 };
 
 const PlacesContext = createContext({} as PlacesContextData);
 
 const PlacesProvider = ({ children }: PlacesProviderProps) => {
-  const [places, setPlaces] = useState<Place[]>([PLACE_INITIAL_STATE]);
+  const [boundsParms, setBoundsParms] = useState<Bounds>(BOUNDS_INITIAL_STATE);
+  const [clickedThumbnailId, setClickedThumbnailId] = useState<string>('');
   const [coordinates, setCoordinates] = useState<Coordinates>(
     {} as Coordinates
   );
-  const [bounds, setBounds] = useState<Bounds>(BOUNDS_INITIAL_STATE);
-  const [clickedThumbnailId, setClickedThumbnailId] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [places, setPlaces] = useState<Place[]>([PLACE_INITIAL_STATE]);
+  const [placeType, setPlaceType] = useState<string>('restaurants');
+  const [placeRating, setPlaceRating] = useState<number>(0);
 
   const updateCoordinates = (coordinates: Coordinates) => {
     setCoordinates({ lat: coordinates.lat, lng: coordinates.lng });
   };
 
   const updateBounds = (bounds: Bounds) => {
-    setBounds({
+    setBoundsParms({
       ne: {
         lat: bounds.ne.lat,
         lng: bounds.ne.lng
@@ -146,27 +154,38 @@ const PlacesProvider = ({ children }: PlacesProviderProps) => {
     setClickedThumbnailId(thumbnailId);
   };
 
-  const getPlaces = async (bounds: Bounds) => {
-    const response: Place[] = await getPlaceService(bounds);
+  const updatePlaceType = (type: string) => {
+    setPlaceType(type);
+  };
+
+  const updatePlaceRating = (rating: number) => {
+    setPlaceRating(rating);
+  };
+  const getPlaces = async (placeType: string, bounds: Bounds) => {
+    setIsLoading(true);
+    const response: Place[] = await getPlaceService(placeType, bounds);
+    setIsLoading(false);
     if (response) {
       setPlaces(response);
     }
   };
 
-  console.log('bounds', bounds);
-  console.log('coordinates', coordinates);
-
   return (
     <PlacesContext.Provider
       value={{
-        places,
-        coordinates,
-        bounds,
+        bounds: boundsParms,
         clickedThumbnailId,
-        updateCoordinates,
+        coordinates,
+        isLoading,
+        places,
+        placeType,
+        placeRating,
+        getPlaces,
         updateBounds,
         updateClickedThumbnail,
-        getPlaces
+        updateCoordinates,
+        updatePlaceType,
+        updatePlaceRating
       }}
     >
       {children}

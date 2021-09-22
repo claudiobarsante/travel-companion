@@ -19,14 +19,15 @@ type Props = {
   places: Place[];
 };
 const List = ({ places }: Props) => {
-  const [type, setType] = useState<string>('restaurants');
-  const [rating, setRating] = useState<number>(0);
-  const [elementsRefs, setElementsRefs] = useState([]);
+  const {
+    clickedThumbnailId,
+    isLoading,
+    placeType,
+    placeRating,
+    updatePlaceRating,
+    updatePlaceType
+  } = usePlaces();
 
-  const { clickedThumbnailId } = usePlaces();
-
-  console.log({ clickedThumbnailId });
-  console.log({ places });
   const classes = useStyles();
 
   return (
@@ -34,46 +35,54 @@ const List = ({ places }: Props) => {
       <Typography variant="h4">
         Restaurants, Hotels & Attractions around you
       </Typography>
-      <FormControl className={classes.formControl}>
-        <InputLabel>Type</InputLabel>
-        <Select
-          value={type}
-          onChange={(e: React.ChangeEvent<{ value: unknown }>) =>
-            setType(e.target.value as string)
-          }
-        >
-          <MenuItem value="restaurants">Restaurants</MenuItem>
-          <MenuItem value="hotels">Hotels</MenuItem>
-          <MenuItem value="attractions">Attractions</MenuItem>
-        </Select>
-      </FormControl>
-      <FormControl className={classes.formControl}>
-        <InputLabel>Rating</InputLabel>
-        <Select
-          value={rating}
-          onChange={(e: React.ChangeEvent<{ value: unknown }>) =>
-            setRating(e.target.value as number)
-          }
-        >
-          <MenuItem value={0}>All</MenuItem>
-          <MenuItem value={3}>Above 3.0</MenuItem>
-          <MenuItem value={4}>Above 4.0</MenuItem>
-          <MenuItem value={4.5}>Above 4.5</MenuItem>
-        </Select>
-      </FormControl>
-      <Grid container spacing={3} className={classes.list}>
-        {places?.map((place) =>
-          place.name ? (
-            <Grid item key={place.location_id} xs={12}>
-              <PlaceDetails
-                place={place}
-                selected={clickedThumbnailId === place.location_id}
-                refProp={place.location_id}
-              />
-            </Grid>
-          ) : null
-        )}
-      </Grid>
+      {isLoading ? (
+        <div className={classes.loading}>
+          <CircularProgress size="5rem" />
+        </div>
+      ) : (
+        <>
+          <FormControl className={classes.formControl}>
+            <InputLabel>Type</InputLabel>
+            <Select
+              value={placeType}
+              onChange={(e: React.ChangeEvent<{ value: unknown }>) =>
+                updatePlaceType(e.target.value as string)
+              }
+            >
+              <MenuItem value="restaurants">Restaurants</MenuItem>
+              <MenuItem value="hotels">Hotels</MenuItem>
+              <MenuItem value="attractions">Attractions</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl className={classes.formControl}>
+            <InputLabel>Rating</InputLabel>
+            <Select
+              value={placeRating}
+              onChange={(e: React.ChangeEvent<{ value: unknown }>) =>
+                updatePlaceRating(e.target.value as number)
+              }
+            >
+              <MenuItem value={0}>All</MenuItem>
+              <MenuItem value={3}>Above 3.0</MenuItem>
+              <MenuItem value={4}>Above 4.0</MenuItem>
+              <MenuItem value={4.5}>Above 4.5</MenuItem>
+            </Select>
+          </FormControl>
+          <Grid container spacing={3} className={classes.list}>
+            {places?.map((place) =>
+              place.name ? (
+                <Grid item key={place.location_id} xs={12}>
+                  <PlaceDetails
+                    place={place}
+                    selected={clickedThumbnailId === place.location_id}
+                    refProp={place.location_id}
+                  />
+                </Grid>
+              ) : null
+            )}
+          </Grid>
+        </>
+      )}
     </div>
   );
 };
