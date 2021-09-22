@@ -1,7 +1,7 @@
 // index.tsx
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Head from 'next/head';
-import type { GetStaticProps, NextPage } from 'next';
+import type { NextPage } from 'next';
 import { Grid } from '@material-ui/core';
 import dynamic from 'next/dynamic';
 import Header from 'components/Header';
@@ -13,14 +13,8 @@ const MapWithNoSSR = dynamic(() => import('components/Map'), {
 });
 
 const Home: NextPage = () => {
-  const {
-    bounds,
-    coordinates,
-    places,
-    updateCoordinates,
-    getPlaces,
-    placeType
-  } = usePlaces();
+  const { bounds, coordinates, updateCoordinates, getPlaces, placeType } =
+    usePlaces();
 
   useEffect(() => {
     // -- getting current location of the user using the built in browser geolocation api
@@ -30,16 +24,11 @@ const Home: NextPage = () => {
         updateCoordinates({ lat: latitude, lng: longitude });
       }
     );
-    getPlaces(placeType, bounds);
-  }, [placeType, bounds]);
+  }, []);
 
-  // useEffect(() => {
-  //   console.log(coordinates, bounds);
-  //   getPlaceService(bounds.sw, bounds.ne).then((data) => {
-  //     console.log('data', data);
-  //     setPlaces(data);
-  //   });
-  // }, [coordinates, bounds]);
+  useEffect(() => {
+    getPlaces(placeType, bounds);
+  }, [placeType, bounds, coordinates]);
 
   return (
     <>
@@ -50,7 +39,7 @@ const Home: NextPage = () => {
       <Header />
       <Grid container spacing={3} style={{ width: '100%' }}>
         <Grid item xs={12} md={4}>
-          <List places={places} />
+          <List />
         </Grid>
         <Grid item xs={12} md={8}>
           <MapWithNoSSR />

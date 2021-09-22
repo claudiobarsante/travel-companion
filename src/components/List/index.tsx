@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   CircularProgress,
   Grid,
@@ -12,18 +12,15 @@ import {
 import PlaceDetails from '../PlaceDetails';
 
 import useStyles from './styles';
-import type { Place } from 'context/usePlaces';
 import { usePlaces } from 'context/usePlaces';
 
-type Props = {
-  places: Place[];
-};
-const List = ({ places }: Props) => {
+const List = () => {
   const {
     clickedThumbnailId,
     isLoading,
     placeType,
     placeRating,
+    places,
     updatePlaceRating,
     updatePlaceType
   } = usePlaces();
@@ -70,7 +67,7 @@ const List = ({ places }: Props) => {
           </FormControl>
           <Grid container spacing={3} className={classes.list}>
             {places?.map((place) =>
-              place.name ? (
+              place.name && Number(place.rating) > placeRating ? (
                 <Grid item key={place.location_id} xs={12}>
                   <PlaceDetails
                     place={place}

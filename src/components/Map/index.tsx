@@ -18,6 +18,7 @@ const Map = () => {
   const {
     places,
     placeType,
+    placeRating,
     coordinates,
     updateClickedThumbnail,
     updateCoordinates,
@@ -57,45 +58,48 @@ const Map = () => {
         }}
         onChildClick={(child) => handleUpdateClickedThumbnail(child)}
       >
-        {places?.map((place, index) => {
+        {places?.map((place) => {
           const lat = place.latitude ? Number(place.latitude) : 0;
           const lng = place.longitude ? Number(place.longitude) : 0;
-          return (
-            <div
-              key={place.location_id}
-              className={classes.markerContainer}
-              lat={lat}
-              lng={lng}
-            >
-              {!isDesktop ? (
-                <LocationOnOutlinedIcon color="primary" fontSize="large" />
-              ) : (
-                <Paper elevation={3} className={classes.paper}>
-                  <Typography
-                    className={classes.typography}
-                    variant="subtitle2"
-                    gutterBottom
-                  >
-                    {place.name}
-                  </Typography>
-                  <img
-                    className={classes.pointer}
-                    src={
-                      place.photo
-                        ? place.photo.images.large.url
-                        : 'https://www.foodserviceandhospitality.com/wp-content/uploads/2016/09/Restaurant-Placeholder-001.jpg'
-                    }
-                  />
-                  <Rating
-                    name="read-only"
-                    size="small"
-                    value={Number(place.rating)}
-                    readOnly
-                  />
-                </Paper>
-              )}
-            </div>
-          );
+
+          if (Number(place.rating) > placeRating) {
+            return (
+              <div
+                key={place.location_id}
+                className={classes.markerContainer}
+                lat={lat}
+                lng={lng}
+              >
+                {!isDesktop ? (
+                  <LocationOnOutlinedIcon color="primary" fontSize="large" />
+                ) : (
+                  <Paper elevation={3} className={classes.paper}>
+                    <Typography
+                      className={classes.typography}
+                      variant="subtitle2"
+                      gutterBottom
+                    >
+                      {place.name}
+                    </Typography>
+                    <img
+                      className={classes.pointer}
+                      src={
+                        place.photo
+                          ? place.photo.images.large.url
+                          : 'https://www.foodserviceandhospitality.com/wp-content/uploads/2016/09/Restaurant-Placeholder-001.jpg'
+                      }
+                    />
+                    <Rating
+                      name="read-only"
+                      size="small"
+                      value={Number(place.rating)}
+                      readOnly
+                    />
+                  </Paper>
+                )}
+              </div>
+            );
+          }
         })}
       </GoogleMapReact>
     </div>

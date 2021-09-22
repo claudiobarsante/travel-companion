@@ -108,6 +108,7 @@ type PlacesContextData = {
   bounds: Bounds;
   clickedThumbnailId: string;
   coordinates: Coordinates;
+  filteredPlaces: Place[];
   isLoading: boolean;
   places: Place[];
   placeType: string;
@@ -132,6 +133,9 @@ const PlacesProvider = ({ children }: PlacesProviderProps) => {
   const [places, setPlaces] = useState<Place[]>([PLACE_INITIAL_STATE]);
   const [placeType, setPlaceType] = useState<string>('restaurants');
   const [placeRating, setPlaceRating] = useState<number>(0);
+  const [filteredPlaces, setFilteredPlaces] = useState<Place[]>([
+    PLACE_INITIAL_STATE
+  ]);
 
   const updateCoordinates = (coordinates: Coordinates) => {
     setCoordinates({ lat: coordinates.lat, lng: coordinates.lng });
@@ -160,7 +164,19 @@ const PlacesProvider = ({ children }: PlacesProviderProps) => {
 
   const updatePlaceRating = (rating: number) => {
     setPlaceRating(rating);
+
+    if (rating === 0) {
+      setFilteredPlaces([PLACE_INITIAL_STATE]);
+    }
+
+    if (rating > 0) {
+      const filteredPlaces = places.filter(
+        (place) => Number(place.rating) > placeRating
+      );
+      setFilteredPlaces(filteredPlaces);
+    }
   };
+
   const getPlaces = async (placeType: string, bounds: Bounds) => {
     setIsLoading(true);
     const response: Place[] = await getPlaceService(placeType, bounds);
@@ -176,6 +192,7 @@ const PlacesProvider = ({ children }: PlacesProviderProps) => {
         bounds: boundsParms,
         clickedThumbnailId,
         coordinates,
+        filteredPlaces,
         isLoading,
         places,
         placeType,
