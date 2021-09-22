@@ -45,10 +45,14 @@ const Map = ({ weatherData }) => {
     updateClickedThumbnail(locationId);
   }, []);
 
+  // if (loadError) {
+  //   return <div>Map cannot be loaded right now, sorry.</div>;
+  // }
+
   return (
     <div className={classes.mapContainer}>
       <GoogleMapReact
-        bootstrapURLKeys={{ key: String(KEY) }}
+        // bootstrapURLKeys={{ key: String(KEY) }}
         defaultCenter={coordinates}
         center={coordinates}
         defaultZoom={14}
@@ -80,11 +84,7 @@ const Map = ({ weatherData }) => {
                   <LocationOnOutlinedIcon color="primary" fontSize="large" />
                 ) : (
                   <Paper elevation={3} className={classes.paper}>
-                    <Typography
-                      className={classes.typography}
-                      variant="subtitle2"
-                      gutterBottom
-                    >
+                    <Typography variant="subtitle2" gutterBottom>
                       {place.name}
                     </Typography>
                     <img

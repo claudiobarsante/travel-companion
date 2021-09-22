@@ -8,10 +8,14 @@ import Header from 'components/Header';
 import List from 'components/List';
 import { usePlaces } from 'context/usePlaces';
 import { getWeatherService } from 'api';
+import Script from 'next/script';
 
 const MapWithNoSSR = dynamic(() => import('components/Map'), {
   ssr: false
 });
+
+const KEY = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
+const URL = `https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${KEY}`;
 
 const Home: NextPage = () => {
   const [weatherData, setWeatherData] = useState([]);
@@ -39,6 +43,7 @@ const Home: NextPage = () => {
 
   return (
     <>
+      <Script src={URL} strategy="beforeInteractive" />
       <Head>
         <title>Travel Companion ✈</title>
         <link rel="icon" href="/favicon.ico" />
