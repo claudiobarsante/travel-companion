@@ -9,10 +9,11 @@ import useStyles from './styles';
 import { usePlaces } from 'context/usePlaces';
 import type { Bounds, Coordinates } from 'context/usePlaces';
 import { useCallback } from 'react';
+import mapCustomStyles from './mapCustomStyles';
 
 const KEY = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
 
-const Map = () => {
+const Map = ({ weatherData }) => {
   const classes = useStyles();
   const isDesktop = useMediaQuery('(min-width:600px)');
   const {
@@ -52,6 +53,11 @@ const Map = () => {
         center={coordinates}
         defaultZoom={14}
         margin={[50, 50, 50, 50]}
+        options={{
+          disableDefaultUI: true,
+          zoomControl: true,
+          styles: mapCustomStyles
+        }}
         onChange={(e: GoogleMapReact.ChangeEventValue) => {
           handleUpdateCoordinates({ lat: e.center.lat, lng: e.center.lng });
           handleUpdateBounds({ ne: e.marginBounds.ne, sw: e.marginBounds.sw });
@@ -101,6 +107,15 @@ const Map = () => {
             );
           }
         })}
+        {weatherData?.list?.length &&
+          weatherData.list.map((data, i) => (
+            <div key={i} lat={data.coord.lat} lng={data.coord.lon}>
+              <img
+                src={`http://openweathermap.org/img/w/${data.weather[0].icon}.png`}
+                height="100px"
+              />
+            </div>
+          ))}
       </GoogleMapReact>
     </div>
   );
