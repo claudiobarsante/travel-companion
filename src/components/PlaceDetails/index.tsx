@@ -73,10 +73,10 @@ const PlaceDetails = ({ place, refProp, selected }: Props) => {
             {place.ranking}
           </Typography>
         </Box>
-        {place?.awards?.map((award, i) => (
+        {place?.awards?.map((award) => (
           // --  my, m - for classes that set margin,y - for classes that set both *-top and *-bottom
           <Box
-            key={i}
+            key={award.display_name}
             display="flex"
             justifyContent="space-between"
             my={1}

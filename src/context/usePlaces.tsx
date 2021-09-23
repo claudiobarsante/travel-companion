@@ -1,5 +1,5 @@
 import { getPlaceService } from 'api';
-import { useContext, createContext, useState } from 'react';
+import { useContext, createContext, useState, useCallback } from 'react';
 
 type PlacesProviderProps = {
   children: React.ReactNode;
@@ -21,7 +21,7 @@ export type Bounds = {
   };
 };
 
-const BOUNDS_INITIAL_STATE = {
+export const BOUNDS_INITIAL_STATE = {
   ne: {
     lat: 0,
     lng: 0
@@ -137,7 +137,14 @@ const PlacesProvider = ({ children }: PlacesProviderProps) => {
     setCoordinates({ lat: coordinates.lat, lng: coordinates.lng });
   };
 
-  const updateBounds = (bounds: Bounds) => {
+  const updateBounds = useCallback((bounds: Bounds) => {
+    // -- There's no need to update bounds if they are equal to the previous bound
+    if (
+      !Object.is(boundsParms, BOUNDS_INITIAL_STATE) &&
+      Object.is(bounds, boundsParms)
+    )
+      return false;
+
     setBoundsParms({
       ne: {
         lat: bounds.ne.lat,
@@ -148,7 +155,7 @@ const PlacesProvider = ({ children }: PlacesProviderProps) => {
         lng: bounds.sw.lng
       }
     });
-  };
+  }, []);
 
   const updateClickedThumbnail = (thumbnailId: string) => {
     setClickedThumbnailId(thumbnailId);

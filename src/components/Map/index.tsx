@@ -11,25 +11,20 @@ import type { Bounds, Coordinates } from 'context/usePlaces';
 import { useCallback } from 'react';
 import mapCustomStyles from './mapCustomStyles';
 
-const KEY = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
-
 const Map = ({ weatherData }) => {
   const classes = useStyles();
   const isDesktop = useMediaQuery('(min-width:600px)');
   const {
     places,
-    placeType,
     placeRating,
     coordinates,
     updateClickedThumbnail,
     updateCoordinates,
-    updateBounds,
-    getPlaces
+    updateBounds
   } = usePlaces();
 
   const handleUpdateBounds = useCallback((bounds: Bounds) => {
     updateBounds(bounds);
-    getPlaces(placeType, bounds);
   }, []);
 
   const handleUpdateCoordinates = useCallback((coordinates: Coordinates) => {
@@ -52,7 +47,6 @@ const Map = ({ weatherData }) => {
   return (
     <div className={classes.mapContainer}>
       <GoogleMapReact
-        // bootstrapURLKeys={{ key: String(KEY) }}
         defaultCenter={coordinates}
         center={coordinates}
         defaultZoom={14}
@@ -77,8 +71,8 @@ const Map = ({ weatherData }) => {
               <div
                 key={place.location_id}
                 className={classes.markerContainer}
-                lat={lat}
-                lng={lng}
+                data-lat={lat}
+                data-lng={lng}
               >
                 {!isDesktop ? (
                   <LocationOnOutlinedIcon color="primary" fontSize="large" />
@@ -109,7 +103,7 @@ const Map = ({ weatherData }) => {
         })}
         {weatherData?.list?.length &&
           weatherData.list.map((data, i) => (
-            <div key={i} lat={data.coord.lat} lng={data.coord.lon}>
+            <div key={i} data-lat={data.coord.lat} data-lng={data.coord.lon}>
               <img
                 src={`http://openweathermap.org/img/w/${data.weather[0].icon}.png`}
                 height="100px"

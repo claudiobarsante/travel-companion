@@ -12,6 +12,8 @@ export const getPlaceService = async (placeType: string, bounds: Bounds) => {
   const URL = `https://travel-advisor.p.rapidapi.com/${placeType}/list-in-boundary`;
 
   const { sw, ne } = bounds;
+  // -- if there's no lat or lng, don't call de api
+  if (sw.lat === 0) return [] as Place[];
 
   const options = {
     params: {
@@ -30,6 +32,7 @@ export const getPlaceService = async (placeType: string, bounds: Bounds) => {
     const {
       data: { data }
     } = await axios.get(URL, options);
+
     return data as Place[];
   } catch (error) {
     console.log('error');

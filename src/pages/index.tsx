@@ -4,7 +4,7 @@ import Head from 'next/head';
 import type { NextPage } from 'next';
 import { Grid } from '@material-ui/core';
 import dynamic from 'next/dynamic';
-import Header from 'components/Header';
+import { Header } from 'components/Header';
 import List from 'components/List';
 import { usePlaces } from 'context/usePlaces';
 import { getWeatherService } from 'api';
@@ -37,6 +37,8 @@ const Home: NextPage = () => {
       getWeatherService({ lat: coordinates.lat, lng: coordinates.lng }).then(
         (data) => setWeatherData(data)
       );
+      console.log('chamando pelo useEffect');
+      console.log('bounds no useEffect', bounds);
       getPlaces(placeType, bounds);
     }
   }, [placeType, bounds]);
