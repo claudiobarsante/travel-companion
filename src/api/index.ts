@@ -32,7 +32,7 @@ export const getPlaceService = async (placeType: string, bounds: Bounds) => {
     const {
       data: { data }
     } = await axios.get(URL, options);
-
+    console.log('---getPlaceService---bounds', bounds);
     return data as Place[];
   } catch (error) {
     console.log('error');

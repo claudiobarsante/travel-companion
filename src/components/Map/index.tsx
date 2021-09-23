@@ -10,6 +10,17 @@ import { usePlaces } from 'context/usePlaces';
 import type { Bounds, Coordinates } from 'context/usePlaces';
 import { useCallback } from 'react';
 import mapCustomStyles from './mapCustomStyles';
+/**
+ * As I added lat and lng attributes to a <div> that aren't attributes
+ * of a HTML element I have to extend the HTMLAttributes to make the <div>
+ * act as a 'marker' on the map and avoid typescript erros when building
+ */
+declare module 'react' {
+  interface HTMLAttributes<T> {
+    lat?: number;
+    lng?: number;
+  }
+}
 
 const Map = ({ weatherData }) => {
   const classes = useStyles();
@@ -71,8 +82,8 @@ const Map = ({ weatherData }) => {
               <div
                 key={place.location_id}
                 className={classes.markerContainer}
-                data-lat={lat}
-                data-lng={lng}
+                lat={lat}
+                lng={lng}
               >
                 {!isDesktop ? (
                   <LocationOnOutlinedIcon color="primary" fontSize="large" />
@@ -102,8 +113,8 @@ const Map = ({ weatherData }) => {
           }
         })}
         {weatherData?.list?.length &&
-          weatherData.list.map((data, i) => (
-            <div key={i} data-lat={data.coord.lat} data-lng={data.coord.lon}>
+          weatherData.list.map((data) => (
+            <div key={data.coord.lat} lat={data.coord.lat} lng={data.coord.lon}>
               <img
                 src={`http://openweathermap.org/img/w/${data.weather[0].icon}.png`}
                 height="100px"

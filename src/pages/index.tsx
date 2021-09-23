@@ -37,8 +37,7 @@ const Home: NextPage = () => {
       getWeatherService({ lat: coordinates.lat, lng: coordinates.lng }).then(
         (data) => setWeatherData(data)
       );
-      console.log('chamando pelo useEffect');
-      console.log('bounds no useEffect', bounds);
+
       getPlaces(placeType, bounds);
     }
   }, [placeType, bounds]);
